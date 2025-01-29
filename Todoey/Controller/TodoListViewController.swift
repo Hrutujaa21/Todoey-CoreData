@@ -47,7 +47,7 @@ class TodoListViewController: UITableViewController {
         
         cell.textLabel?.text = item.title
         
-        cell.accessoryType = item.done == true ? .checkmark : .none
+        cell.accessoryType = item.done ? .checkmark : .none
         
         return cell
     }
@@ -55,10 +55,13 @@ class TodoListViewController: UITableViewController {
     //MARK: Tableview Delegate Methods
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //Below commented code to remove record
+//        context.delete(itemArray[indexPath.row])
+//        itemArray.remove(at: indexPath.row)
         
         itemArray[indexPath.row].done = !itemArray[indexPath.row].done
         
-        self.saveItems()
+        saveItems()
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -91,13 +94,12 @@ class TodoListViewController: UITableViewController {
     //MARK: Model Manipulations Methods
     
     func saveItems() {
-    
         do {
-           try self.context.save()
+           try context.save()
         } catch {
             print("Error saving context \(error)")
         }
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     func loadItems() {
@@ -107,6 +109,7 @@ class TodoListViewController: UITableViewController {
         } catch {
             print("Error fetching data from context \(error)")
         }
+        tableView.reloadData()
     }
 }
 
