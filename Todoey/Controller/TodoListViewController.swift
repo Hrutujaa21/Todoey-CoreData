@@ -20,22 +20,13 @@ class TodoListViewController: UITableViewController {
         
         print(dataFilePath)
         
-        let newItem = Item()
-        newItem.title = "Buy Eggs"
-        itemArray.append(newItem)
+        loadItems()
         
-        let newItem2 = Item()
-        newItem2.title = "Find Mike"
-        itemArray.append(newItem2)
-        
-        let newItem3 = Item()
-        newItem3.title = "Go to gym!"
-        itemArray.append(newItem3)
-        
-        //        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
-        //            itemArray = items
-        //        }
-        
+        //Plotted data from or using UserDefaults
+//        if let items = defaults.array(forKey: "ToDoListArray") as? [String] {
+//            itemArray = items
+//        }
+
 //        if let items = defaults.array(forKey: "ToDoListArray") as? [Item] {
 //            itemArray = items
 //        }
@@ -107,5 +98,15 @@ class TodoListViewController: UITableViewController {
         self.tableView.reloadData()
     }
     
+    func loadItems() {
+        if let data = try? Data(contentsOf: dataFilePath!) {
+            let decoder = PropertyListDecoder()
+            do {
+                itemArray = try decoder.decode([Item].self, from: data)
+            } catch {
+                print("Error decoding item array \(error)")
+            }
+        }
+    }
 }
 
